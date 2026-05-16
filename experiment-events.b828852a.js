@@ -721,17 +721,27 @@ async function app() {
     (0, _render.renderEvents)(events);
 }
 app();
+document.querySelector(".cards_list").addEventListener("click", (e)=>{
+    const card = e.target.closest(".cards_item");
+    if (!card) return;
+    const id = card.dataset.id;
+    (0, _api.getOneEvent)(id).then((event)=>(0, _render.renderEventModal)(event));
+});
 
 },{"./api":"4yEOZ","./render":"dvMGd"}],"4yEOZ":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "getDefaultEvents", ()=>getDefaultEvents);
+parcelHelpers.export(exports, "getOneEvent", ()=>getOneEvent);
 const MAIN_URL = "https://app.ticketmaster.com/discovery/v2/", API_KEY = "JIZUA78ORWWvAkFITEgp9n4NpYKrXysZ", PER_PAGE = 20;
 let page = 1;
 async function getDefaultEvents() {
-    const responce = await fetch(MAIN_URL + `events.json?apikey=${API_KEY}&size=${PER_PAGE}&page=${page}`), data = await responce.json();
-    console.log(data);
+    const response = await fetch(MAIN_URL + `events.json?apikey=${API_KEY}&size=${PER_PAGE}&page=${page}`), data = await response.json();
     return data._embedded.events;
+}
+async function getOneEvent(id) {
+    const response = await fetch(MAIN_URL + `events/${id}.json?apikey=${API_KEY}`), data = await response.json();
+    return data;
 }
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"jnFvT":[function(require,module,exports,__globalThis) {
@@ -768,6 +778,7 @@ exports.export = function(dest, destName, get) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "renderEvents", ()=>renderEvents);
+parcelHelpers.export(exports, "renderEventModal", ()=>renderEventModal);
 const cardsList = document.querySelector(".cards_list");
 function renderEvents(events) {
     cardsList.innerHTML = "";
@@ -780,6 +791,22 @@ function renderEvents(events) {
                 <p class="cards_place event">${event._embedded.venues[0].name}</p>
             </li>
         `;
+    });
+}
+function renderEventModal(event) {
+    const modal = document.createElement("div");
+    modal.classList.add("modal");
+    modal.innerHTML = `
+        <div class="modal_content">
+            <h2>${event.name}</h2>
+            <p>${event.dates?.start?.localDate}</p>
+            <p>${event._embedded?.venues?.[0]?.name}</p>
+            <button class="modal_close">Close</button>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    modal.querySelector(".modal_close").addEventListener("click", ()=>{
+        modal.remove();
     });
 }
 
