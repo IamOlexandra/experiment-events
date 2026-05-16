@@ -207,11 +207,11 @@
       });
     }
   }
-})({"93v64":[function(require,module,exports,__globalThis) {
+})({"kRQrf":[function(require,module,exports,__globalThis) {
 var global = arguments[3];
 var HMR_HOST = null;
 var HMR_PORT = null;
-var HMR_SERVER_PORT = 1234;
+var HMR_SERVER_PORT = 62721;
 var HMR_SECURE = false;
 var HMR_ENV_HASH = "439701173a9199ea";
 var HMR_USE_SSE = false;
@@ -721,6 +721,14 @@ async function app() {
     (0, _render.renderEvents)(events);
 }
 app();
+document.querySelector(".cards_list").addEventListener("click", async (e)=>{
+    const card = e.target.closest(".cards_item");
+    if (card) return;
+    const id = card.dataset.id;
+    const response = await fetch(`https://app.ticketmaster.com/discovery/v2/events/${id}.json?apikey=JIZUA78ORWWvAkFITEgp9n4NpYKrXysZ`);
+    const event = await response.json();
+    renderEventModal(event);
+});
 
 },{"./api":"4yEOZ","./render":"dvMGd"}],"4yEOZ":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -768,6 +776,7 @@ exports.export = function(dest, destName, get) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "renderEvents", ()=>renderEvents);
+parcelHelpers.export(exports, "renderEventModal", ()=>renderEventModal);
 const cardsList = document.querySelector(".cards_list");
 function renderEvents(events) {
     cardsList.innerHTML = "";
@@ -782,7 +791,23 @@ function renderEvents(events) {
         `;
     });
 }
+function renderEventModal(event) {
+    const modal = document.createElement("div");
+    modal.classList.add("modal");
+    modal.innerHTML = `
+        <div class="modal_content">
+            <h2>${event.name}</h2>
+            <p>${event.dates?.start?.localDate}</p>
+            <p>${event._embedded?.venues?.[0]?.name}</p>
+            <button class="modal_close">Close</button>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    modal.querySelector(".modal_close").addEventListener("click", ()=>{
+        modal.remove();
+    });
+}
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}]},["93v64","lhpGb"], "lhpGb", "parcelRequireb97b", {})
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}]},["kRQrf","lhpGb"], "lhpGb", "parcelRequireb97b", {})
 
 //# sourceMappingURL=experiment-events.b828852a.js.map

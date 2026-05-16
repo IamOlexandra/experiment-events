@@ -13,3 +13,23 @@ export function renderEvents(events) {
         `;
     });
 }
+
+export function renderEventModal(event) {
+    const modal = document.createElement("div");
+    modal.classList.add("modal");
+
+    modal.innerHTML = `
+        <div class="modal_content">
+            <h2>${event.name}</h2>
+            <p>${event.dates?.start?.localDate}</p>
+            <p>${event._embedded?.venues?.[0]?.name}</p>
+            <button class="modal_close">Close</button>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    modal.querySelector(".modal_close").addEventListener("click", () => {
+        modal.remove();
+    });
+}
