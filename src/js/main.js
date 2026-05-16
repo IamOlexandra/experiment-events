@@ -1,9 +1,10 @@
 import {getDefaultEvents, getOneEvent} from "./api";
 import {renderEvents, renderEventModal} from "./render";
+let page = 0;
 
 async function app() {
-    const events = await getDefaultEvents();
-    renderEvents(events)
+    const events = await getDefaultEvents(page);
+    renderEvents(events);
 }
 app();
 

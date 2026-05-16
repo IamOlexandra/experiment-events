@@ -716,8 +716,9 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 },{}],"lhpGb":[function(require,module,exports,__globalThis) {
 var _api = require("./api");
 var _render = require("./render");
+let page = 0;
 async function app() {
-    const events = await (0, _api.getDefaultEvents)();
+    const events = await (0, _api.getDefaultEvents)(page);
     (0, _render.renderEvents)(events);
 }
 app();
@@ -734,8 +735,7 @@ parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "getDefaultEvents", ()=>getDefaultEvents);
 parcelHelpers.export(exports, "getOneEvent", ()=>getOneEvent);
 const MAIN_URL = "https://app.ticketmaster.com/discovery/v2/", API_KEY = "JIZUA78ORWWvAkFITEgp9n4NpYKrXysZ", PER_PAGE = 20;
-let page = 1;
-async function getDefaultEvents() {
+async function getDefaultEvents(page) {
     const response = await fetch(MAIN_URL + `events.json?apikey=${API_KEY}&size=${PER_PAGE}&page=${page}`), data = await response.json();
     return data._embedded.events;
 }
