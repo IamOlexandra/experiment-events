@@ -1,5 +1,5 @@
-import {getDefaultEvents} from "./api";
-import {renderEvents} from "./render";
+import {getDefaultEvents, getOneEvent} from "./api";
+import {renderEvents, renderEventModal} from "./render";
 
 async function app() {
     const events = await getDefaultEvents();
@@ -8,18 +8,15 @@ async function app() {
 app();
 
 
-document.querySelector(".cards_list").addEventListener("click", async (e) => {
+document.querySelector(".cards_list").addEventListener("click", (e) => {
     const card = e.target.closest(".cards_item");
 
-    if (card) return;
+    if (!card) {
+        return;
+    }
 
     const id = card.dataset.id;
 
-    const response = await fetch(
-        `https://app.ticketmaster.com/discovery/v2/events/${id}.json?apikey=JIZUA78ORWWvAkFITEgp9n4NpYKrXysZ`
-    );
-
-    const event = await response.json();
-
-    renderEventModal(event);
+    getOneEvent(id)
+        .then(event => renderEventModal(event));
 });
