@@ -1,0 +1,11 @@
+:root {
+    --accent: #dc56c5;
+    --accent-hover: #cf31b5;
+    --background: #000;
+    --text: #fff;
+    --light-text: #939393;
+    --modal-bg: #fff2fd;
+    --buttons: #4c00fe;
+    --buttons-hover: #4000d5;
+    --header-gradient: #c4c4c4;
+}
