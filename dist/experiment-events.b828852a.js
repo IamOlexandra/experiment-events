@@ -722,11 +722,18 @@ async function app() {
     (0, _render.renderEvents)(events);
 }
 app();
+(0, _render.renderPagination)();
 document.querySelector(".cards_list").addEventListener("click", (e)=>{
     const card = e.target.closest(".cards_item");
     if (!card) return;
     const id = card.dataset.id;
     (0, _api.getOneEvent)(id).then((event)=>(0, _render.renderEventModal)(event));
+});
+document.querySelector(".cards_pag").addEventListener("click", (e)=>{
+    const pagBtn = e.target.closest(".pag_item");
+    if (!pagBtn) return;
+    page = Number(pagBtn.dataset.page);
+    app();
 });
 
 },{"./api":"4yEOZ","./render":"dvMGd"}],"4yEOZ":[function(require,module,exports,__globalThis) {
@@ -779,6 +786,7 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "renderEvents", ()=>renderEvents);
 parcelHelpers.export(exports, "renderEventModal", ()=>renderEventModal);
+parcelHelpers.export(exports, "renderPagination", ()=>renderPagination);
 const cardsList = document.querySelector(".cards_list");
 function renderEvents(events) {
     cardsList.innerHTML = "";
@@ -808,6 +816,15 @@ function renderEventModal(event) {
     modal.querySelector(".modal_close").addEventListener("click", ()=>{
         modal.remove();
     });
+}
+const cardsPag = document.querySelector(".cards_pag");
+function renderPagination() {
+    cardsPag.innerHTML = "";
+    for(let i = 0; i < 50; i++)cardsPag.innerHTML += `
+            <li class="pag_item" data-page="${i}">
+                ${i + 1}
+            </li>
+        `;
 }
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}]},["93v64","lhpGb"], "lhpGb", "parcelRequireb97b", {})

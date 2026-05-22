@@ -33,3 +33,20 @@ export function renderEventModal(event) {
         modal.remove();
     });
 }
+
+
+const cardsPag = document.querySelector(".cards_pag");
+
+export function renderPagination() {
+
+    cardsPag.innerHTML = "";
+
+    for (let i = 0; i < 50; i++) {
+
+        cardsPag.innerHTML += `
+            <li class="pag_item" data-page="${i}">
+                ${i + 1}
+            </li>
+        `;
+    }
+}
