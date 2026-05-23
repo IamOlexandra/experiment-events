@@ -150,6 +150,12 @@ header {
     height: 227px;
     border-radius: var(--card-radius);
     margin-bottom: 5px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+}
+.cards_img {
+    height: 100%;
 }
 .cards_item::after {
     position: absolute;
@@ -226,7 +232,7 @@ header {
     border-color: var(--accent-hover) !important;
     outline: none;
 }
-.cards_pag_current { /*Я зміню назву цього тласа до того, що буде у Назара*/
+.pag_current {
     pointer-events: none;
     border-color: var(--accent) !important;
     color: var(--accent) !important;
@@ -262,6 +268,9 @@ footer {
         width: 180px;
         height: 151px;
     }
+    body {
+        background-image: url(../img/tablet_background.png), url(../img/noise_body.png);
+    }
     .nav {
         padding-bottom: 136px;
     }
@@ -285,6 +294,12 @@ footer {
 @media (width < 590px) {
     * {
         font-size: 14px;
+    }
+    body {
+        background-image: url(../img/noise_body.png);
+        background-repeat: repeat;
+        background-position-x: center;
+        background-position-y: center;
     }
     header, .header_logo {
         width: 107px;

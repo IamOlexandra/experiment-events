@@ -161,9 +161,16 @@ header {
 
 .cards_poster {
   border-radius: var(--card-radius);
+  justify-content: center;
   width: 180px;
   height: 227px;
   margin-bottom: 5px;
+  display: flex;
+  overflow: hidden;
+}
+
+.cards_img {
+  height: 100%;
 }
 
 .cards_item:after {
@@ -251,7 +258,7 @@ header {
   border-color: var(--accent-hover) !important;
 }
 
-.cards_pag_current {
+.pag_current {
   pointer-events: none;
   border-color: var(--accent) !important;
   color: var(--accent) !important;
@@ -290,6 +297,10 @@ footer {
     height: 151px;
   }
 
+  body {
+    background-image: url("tablet_background.1611ad1f.png"), url("noise_body.608860f6.png");
+  }
+
   .nav {
     padding-bottom: 136px;
   }
@@ -317,6 +328,12 @@ footer {
 @media (width < 590px) {
   * {
     font-size: 14px;
+  }
+
+  body {
+    background-image: url("noise_body.608860f6.png");
+    background-position: center;
+    background-repeat: repeat;
   }
 
   header, .header_logo {

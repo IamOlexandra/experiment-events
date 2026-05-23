@@ -5,7 +5,7 @@ const MAIN_URL = "https://app.ticketmaster.com/discovery/v2/",
 export async function getDefaultEvents(page) {
     const response = await fetch(MAIN_URL + `events.json?apikey=${API_KEY}&size=${PER_PAGE}&page=${page}`),
         data = await response.json();
-    return data._embedded.events;
+    return data;
 }
 
 export async function getOneEvent(id) {
