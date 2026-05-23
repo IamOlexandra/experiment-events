@@ -1,5 +1,5 @@
 import {getDefaultEvents, getOneEvent} from "./api";
-import {renderEvents, renderEventModal} from "./render";
+import {renderEvents, renderEventModal, renderPagination} from "./render";
 let page = 0;
 
 async function app() {
@@ -7,7 +7,7 @@ async function app() {
     renderEvents(events);
 }
 app();
-
+renderPagination();
 
 document.querySelector(".cards_list").addEventListener("click", (e) => {
     const card = e.target.closest(".cards_item");
@@ -20,4 +20,18 @@ document.querySelector(".cards_list").addEventListener("click", (e) => {
 
     getOneEvent(id)
         .then(event => renderEventModal(event));
+});
+
+
+document.querySelector(".cards_pag").addEventListener("click", (e) => {
+
+    const pagBtn = e.target.closest(".pag_item");
+
+    if (!pagBtn) {
+        return;
+    }
+
+    page = Number(pagBtn.dataset.page);
+
+    app();
 });
