@@ -718,8 +718,9 @@ var _api = require("./api");
 var _render = require("./render");
 let page = 0;
 async function app() {
-    const events = await (0, _api.getDefaultEvents)(page);
-    (0, _render.renderEvents)(events);
+    const data = await (0, _api.getDefaultEvents)(page);
+    (0, _render.renderEvents)(data._embedded.events);
+    (0, _render.renderPagination)(data.page.totalPages, page);
 }
 app();
 document.querySelector(".cards_list").addEventListener("click", (e)=>{
@@ -727,6 +728,12 @@ document.querySelector(".cards_list").addEventListener("click", (e)=>{
     if (!card) return;
     const id = card.dataset.id;
     (0, _api.getOneEvent)(id).then((event)=>(0, _render.renderEventModal)(event));
+});
+document.querySelector(".cards_pag").addEventListener("click", (e)=>{
+    const pagBtn = e.target.closest(".pag_button");
+    if (!pagBtn) return;
+    page = Number(pagBtn.dataset.page);
+    app();
 });
 
 },{"./api":"4yEOZ","./render":"dvMGd"}],"4yEOZ":[function(require,module,exports,__globalThis) {
@@ -737,7 +744,7 @@ parcelHelpers.export(exports, "getOneEvent", ()=>getOneEvent);
 const MAIN_URL = "https://app.ticketmaster.com/discovery/v2/", API_KEY = "JIZUA78ORWWvAkFITEgp9n4NpYKrXysZ", PER_PAGE = 20;
 async function getDefaultEvents(page) {
     const response = await fetch(MAIN_URL + `events.json?apikey=${API_KEY}&size=${PER_PAGE}&page=${page}`), data = await response.json();
-    return data._embedded.events;
+    return data;
 }
 async function getOneEvent(id) {
     const response = await fetch(MAIN_URL + `events/${id}.json?apikey=${API_KEY}`), data = await response.json();
@@ -779,16 +786,19 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "renderEvents", ()=>renderEvents);
 parcelHelpers.export(exports, "renderEventModal", ()=>renderEventModal);
+parcelHelpers.export(exports, "renderPagination", ()=>renderPagination);
 const cardsList = document.querySelector(".cards_list");
 function renderEvents(events) {
     cardsList.innerHTML = "";
     events.forEach((event)=>{
         cardsList.innerHTML += `
-            <li class="cards_item event" data-id="${event.id}">
-                <img src="${event.images[0].url}" alt="${event.name}" class="cards_poster event">
-                <h2 class="cards_name event">${event.name}</h2>
-                <p class="cards_date event">${event.dates.start.localDate}</p>
-                <p class="cards_place event">${event._embedded.venues[0].name}</p>
+            <li class="cards_item" data-id="${event.id}">
+                <div class="cards_poster">
+                    <img src="${event.images[0].url}" alt="${event.name}" class="cards_image">
+                </div>
+                <h2 class="cards_name">${event.name}</h2>
+                <p class="cards_date">${event.dates.start.localDate}</p>
+                <p class="cards_place">${event._embedded.venues[0].name}</p>
             </li>
         `;
     });
@@ -808,6 +818,33 @@ function renderEventModal(event) {
     modal.querySelector(".modal_close").addEventListener("click", ()=>{
         modal.remove();
     });
+}
+const cardsPag = document.querySelector(".cards_pag");
+function createPaginationElements(dataPage, text, isCurrent) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.classList.add("pag_button");
+    if (isCurrent) button.classList.add("pag_current");
+    button.dataset.page = dataPage;
+    button.textContent = text;
+    const li = document.createElement("li");
+    li.append(button);
+    return li;
+}
+function renderPagination(totalPages, page) {
+    cardsPag.innerHTML = "";
+    if (totalPages > 29) totalPages = 29;
+    if (page === 0) cardsPag.append(createPaginationElements(page, page + 1, true), createPaginationElements(page + 1, ">", false), createPaginationElements(totalPages, totalPages + 1, false));
+    else if (page === totalPages) cardsPag.append(createPaginationElements(0, 1, false), createPaginationElements(page - 1, "<", false), createPaginationElements(page, page + 1, true));
+    else cardsPag.append(createPaginationElements(0, 1, false), createPaginationElements(page - 1, "<", false), createPaginationElements(page, page + 1, true), createPaginationElements(page + 1, ">", false), createPaginationElements(totalPages, totalPages + 1, false));
+// for (let i = 0; i <= totalPages; i++) {
+//     const item = document.createElement("li");
+//     item.innerHTML = `<button type="button" class="pag_button" data-page="${i}">${i + 1}</button>`;
+//     if (i === page) {
+//         item.querySelector(".pag_button").classList.add("pag_current")
+//     }
+//     cardsPag.append(item);
+// }
 }
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}]},["93v64","lhpGb"], "lhpGb", "parcelRequireb97b", {})
