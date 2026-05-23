@@ -716,13 +716,24 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 },{}],"lhpGb":[function(require,module,exports,__globalThis) {
 var _api = require("./api");
 var _render = require("./render");
-let page = 0;
+let page = 0, currentSearch = null;
 async function app() {
     const data = await (0, _api.getDefaultEvents)(page);
     (0, _render.renderEvents)(data._embedded.events);
     (0, _render.renderPagination)(data.page.totalPages, page);
 }
 app();
+async function searchResultsLoad() {
+    const data = await (0, _api.getEventsByQuery)(page, currentSearch);
+    (0, _render.renderEvents)(data._embedded.events);
+    (0, _render.renderPagination)(data.page.totalPages, page);
+}
+document.querySelector(".nav_wrap").addEventListener("submit", (event)=>{
+    event.preventDefault();
+    page = 0;
+    currentSearch = document.querySelector("input.nav_inp").value;
+    searchResultsLoad();
+});
 document.querySelector(".cards_list").addEventListener("click", (e)=>{
     const card = e.target.closest(".cards_item");
     if (!card) return;
@@ -733,7 +744,8 @@ document.querySelector(".cards_pag").addEventListener("click", (e)=>{
     const pagBtn = e.target.closest(".pag_button");
     if (!pagBtn) return;
     page = Number(pagBtn.dataset.page);
-    app();
+    if (currentSearch) searchResultsLoad();
+    else app();
 });
 
 },{"./api":"4yEOZ","./render":"dvMGd"}],"4yEOZ":[function(require,module,exports,__globalThis) {
@@ -741,6 +753,7 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "getDefaultEvents", ()=>getDefaultEvents);
 parcelHelpers.export(exports, "getOneEvent", ()=>getOneEvent);
+parcelHelpers.export(exports, "getEventsByQuery", ()=>getEventsByQuery);
 const MAIN_URL = "https://app.ticketmaster.com/discovery/v2/", API_KEY = "JIZUA78ORWWvAkFITEgp9n4NpYKrXysZ", PER_PAGE = 20;
 async function getDefaultEvents(page) {
     const response = await fetch(MAIN_URL + `events.json?apikey=${API_KEY}&size=${PER_PAGE}&page=${page}`), data = await response.json();
@@ -748,6 +761,10 @@ async function getDefaultEvents(page) {
 }
 async function getOneEvent(id) {
     const response = await fetch(MAIN_URL + `events/${id}.json?apikey=${API_KEY}`), data = await response.json();
+    return data;
+}
+async function getEventsByQuery(page, query) {
+    const response = await fetch(MAIN_URL + `events.json?apikey=${API_KEY}&size=${PER_PAGE}&page=${page}&keyword=${query}`), data = await response.json();
     return data;
 }
 
