@@ -1,0 +1,1 @@
+{"mappings":"AAAA;;;;;;AAKA;;;;AAGA","sources":["src/css/reset.css"],"sourcesContent":["* {\r\n    margin: 0;\r\n    padding: 0;\r\n    box-sizing: border-box;\r\n}\r\nli {\r\n    list-style: none;\r\n}\r\na {\r\n    text-decoration: none;\r\n}"],"names":[],"version":3,"file":"experiment-events.008b0dfe.css.map","sourceRoot":"/__parcel_source_root/"}

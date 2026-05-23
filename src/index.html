@@ -4,31 +4,40 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Document</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="./css/reset.css">
         <link rel="stylesheet" href="./css/style.css">
     </head>
     <body>
         <header class="header">
             <img src="./img/logo.svg" alt="#" class="header_logo">
         </header>
-        <main class="container">
+        <main>
             <section class="nav">
-                <h1 class="nav_text">FIND BEST EVENTS<br>AROUND THE WORLD</h1>
-                <form class="nav_form">
-                    <input type="text" class="nav_inp">
-                    <button type="submit"></button>
-                    <select class="nav_inp nav_select">
-                        <option value="">Choose country</option>
-                        <option value="US">United States</option>
-                        <option value="CA">Canada</option>
-                        <option value="MX">Mexico</option>
-                        <option value="AU">Australia</option>
-                        <option value="NZ">New Zealand</option>
-                        <option value="GB">United Kingdom</option>
-                        <option value="IE">Ireland</option>
-                    </select>
-                </form>
+                <div class="container">
+                    <h1 class="nav_text">FIND BEST EVENTS<br>AROUND THE WORLD</h1>
+                    <form class="nav_form">
+                        <div class="nav_wrap">
+                            <input type="text" class="nav_inp" placeholder="Start searching">
+                            <button type="submit" class="nav_button"></button>
+                        </div>
+                        <select class="nav_inp nav_select">
+                            <option value="">Choose country</option>
+                            <option value="US">United States</option>
+                            <option value="CA">Canada</option>
+                            <option value="MX">Mexico</option>
+                            <option value="AU">Australia</option>
+                            <option value="NZ">New Zealand</option>
+                            <option value="GB">United Kingdom</option>
+                            <option value="IE">Ireland</option>
+                        </select>
+                    </form>
+                </div>
             </section>
-            <section class="cards">
+            <section class="cards container">
+                <p class="cards_info"></p>
                 <ul class="cards_list"><!--Сюди йдуть картки з івентами--></ul>
                 <ul class="cards_pag"><!--Сюди йде пагінація--></ul>
             </section>
