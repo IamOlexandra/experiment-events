@@ -17,15 +17,44 @@ export function renderEvents(events) {
 }
 
 export function renderEventModal(event) {
+
     const modal = document.createElement("div");
     modal.classList.add("modal");
 
     modal.innerHTML = `
         <div class="modal_content">
-            <h2>${event.name}</h2>
+
+            <button class="modal_close">x</button>
+
+            <img 
+                src="${event.images[0].url}" 
+                alt="${event.name}"
+                class="modal_img"
+            >
+
+            <h2>INFO</h2>
+            <p>${event.info || "No info"}</p>
+
+            <h2>WHEN</h2>
             <p>${event.dates?.start?.localDate}</p>
+
+            <h2>WHERE</h2>
             <p>${event._embedded?.venues?.[0]?.name}</p>
-            <button class="modal_close">Close</button>
+
+            <h2>WHO</h2>
+            <p>${event.name}</p>
+
+            <h2>PRICES</h2>
+            <p>
+                Standard ${event.priceRanges?.[0]?.min || "-"} 
+                -
+                ${event.priceRanges?.[0]?.max || "-"} USD
+            </p>
+
+            <a href="${event.url}" target="_blank">
+                BUY TICKETS
+            </a>
+
         </div>
     `;
 
@@ -34,8 +63,24 @@ export function renderEventModal(event) {
     modal.querySelector(".modal_close").addEventListener("click", () => {
         modal.remove();
     });
-}
 
+    modal.addEventListener("click", (e) => {
+
+        if (e.target === modal) {
+            modal.remove();
+        }
+
+    });
+
+    document.addEventListener("keydown", (e) => {
+
+        if (e.key === "Escape") {
+            modal.remove();
+        }
+
+    });
+
+}
 
 const cardsPag = document.querySelector(".cards_pag");
 function createPaginationElements(dataPage, text, isCurrent) {

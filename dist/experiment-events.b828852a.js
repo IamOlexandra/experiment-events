@@ -207,11 +207,11 @@
       });
     }
   }
-})({"93v64":[function(require,module,exports,__globalThis) {
+})({"j0hWu":[function(require,module,exports,__globalThis) {
 var global = arguments[3];
 var HMR_HOST = null;
 var HMR_PORT = null;
-var HMR_SERVER_PORT = 1234;
+var HMR_SERVER_PORT = 60884;
 var HMR_SECURE = false;
 var HMR_ENV_HASH = "439701173a9199ea";
 var HMR_USE_SSE = false;
@@ -826,15 +826,49 @@ function renderEventModal(event) {
     modal.classList.add("modal");
     modal.innerHTML = `
         <div class="modal_content">
-            <h2>${event.name}</h2>
+
+            <button class="modal_close">x</button>
+
+            <img 
+                src="${event.images[0].url}" 
+                alt="${event.name}"
+                class="modal_img"
+            >
+
+            <h2>INFO</h2>
+            <p>${event.info || "No info"}</p>
+
+            <h2>WHEN</h2>
             <p>${event.dates?.start?.localDate}</p>
+
+            <h2>WHERE</h2>
             <p>${event._embedded?.venues?.[0]?.name}</p>
-            <button class="modal_close">Close</button>
+
+            <h2>WHO</h2>
+            <p>${event.name}</p>
+
+            <h2>PRICES</h2>
+            <p>
+                Standard ${event.priceRanges?.[0]?.min || "-"} 
+                -
+                ${event.priceRanges?.[0]?.max || "-"} USD
+            </p>
+
+            <a href="${event.url}" target="_blank">
+                BUY TICKETS
+            </a>
+
         </div>
     `;
     document.body.appendChild(modal);
     modal.querySelector(".modal_close").addEventListener("click", ()=>{
         modal.remove();
+    });
+    modal.addEventListener("click", (e)=>{
+        if (e.target === modal) modal.remove();
+    });
+    document.addEventListener("keydown", (e)=>{
+        if (e.key === "Escape") modal.remove();
     });
 }
 const cardsPag = document.querySelector(".cards_pag");
@@ -865,6 +899,6 @@ function renderPagination(totalPages, page) {
 // }
 }
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}]},["93v64","lhpGb"], "lhpGb", "parcelRequireb97b", {})
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}]},["j0hWu","lhpGb"], "lhpGb", "parcelRequireb97b", {})
 
 //# sourceMappingURL=experiment-events.b828852a.js.map
