@@ -732,6 +732,7 @@ document.querySelector(".nav_wrap").addEventListener("submit", (event)=>{
     event.preventDefault();
     page = 0;
     currentSearch = document.querySelector("input.nav_inp").value;
+    document.querySelector(".cards_info").textContent = `Search resulst for "${currentSearch}":`;
     searchResultsLoad();
 });
 document.querySelector(".cards_list").addEventListener("click", (e)=>{
