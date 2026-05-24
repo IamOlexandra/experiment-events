@@ -10,7 +10,7 @@ export function renderEvents(events) {
                 </div>
                 <h2 class="cards_name">${event.name}</h2>
                 <p class="cards_date">${event.dates.start.localDate}</p>
-                <p class="cards_place">${event._embedded.venues[0].name}</p>
+                <p class="cards_place">${event._embedded?.venues[0]?.name}</p>
             </li>
         `;
     });
@@ -24,37 +24,35 @@ export function renderEventModal(event) {
     modal.innerHTML = `
         <div class="modal_content">
 
-            <button class="modal_close">x</button>
+            <button class="modal_close"></button>
 
-            <img 
-                src="${event.images[0].url}" 
-                alt="${event.name}"
-                class="modal_img"
-            >
+            <div class="modal_circle"></div>
 
-            <h2>INFO</h2>
-            <p>${event.info || "No info"}</p>
+            <div class="modal_placing">
+                <img 
+                    src="${event.images[1].url}" 
+                    alt="${event.name}"
+                    class="modal_img"
+                >
 
-            <h2>WHEN</h2>
-            <p>${event.dates?.start?.localDate}</p>
+                <div class="modal_wrap">
+                    <h2 class="modal_title">INFO</h2>
+                    <p class="modal_text">${event.info || "No info"}</p>
 
-            <h2>WHERE</h2>
-            <p>${event._embedded?.venues?.[0]?.name}</p>
+                    <h2 class="modal_title">WHEN</h2>
+                    <p class="modal_text">${event.dates?.start?.localDate}<br>${event.dates?.start?.localTime} (${event.dates?.timezone || "underfined timezone"})</p>
 
-            <h2>WHO</h2>
-            <p>${event.name}</p>
+                    <h2 class="modal_title">WHERE</h2>
+                    <p class="modal_text">${event._embedded?.venues?.[0]?.city?.name}, ${event._embedded?.venues?.[0]?.country?.name}<br>${event._embedded?.venues?.[0]?.name}</p>
 
-            <h2>PRICES</h2>
-            <p>
-                Standard ${event.priceRanges?.[0]?.min || "-"} 
-                -
-                ${event.priceRanges?.[0]?.max || "-"} USD
-            </p>
+                    <h2 class="modal_title">WHO</h2>
+                    <p class="modal_text">${event.name}</p>
 
-            <a href="${event.url}" target="_blank">
-                BUY TICKETS
-            </a>
-
+                    <a href="${event.url}" target="_blank" class="modal_button">
+                        BUY TICKETS
+                    </a>
+                </div>
+            </div>
         </div>
     `;
 
@@ -100,6 +98,8 @@ export function renderPagination(totalPages, page) {
     cardsPag.innerHTML = "";
     if (totalPages > 29) {
         totalPages = 29;
+    } else {
+        totalPages--;
     }
     if (page === 0) {
         cardsPag.append(createPaginationElements(page, page + 1, true), createPaginationElements(page + 1, ">", false), createPaginationElements(totalPages, totalPages + 1, false))

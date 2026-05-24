@@ -7,7 +7,9 @@
     --input-button: #ffffff11;
     --input: #ffffff33;
     --input-hover: #ffffff44;
+    --modal-backdrop: #200d1d99;
     --modal-bg: #fff2fd;
+    --close-hover: #00000022;
     --buttons: #4c00fe;
     --buttons-hover: #4000d5;
     --header-gradient: #c4c4c4;
@@ -153,6 +155,7 @@ header {
     overflow: hidden;
     display: flex;
     justify-content: center;
+    background-color: var(--light-text);
 }
 .cards_img {
     height: 100%;
@@ -251,16 +254,86 @@ footer {
     position: fixed;
     top: 0;
     left: 0;
+    z-index: 3;
     width: 100%;
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #00000080;
+    background-color: var(--modal-backdrop);
+    backdrop-filter: blur(3px);
+    cursor: pointer;
 }
 .modal_content {
-    background-color: white;
-    padding: 20px;
+    position: relative;
+    background-color: var(--modal-bg);
+    padding: 62px 20px;
+    border-radius: 300px 0 300px 0;
+    max-height: 100vh;
+    overflow: auto;
+    scrollbar-color: var(--modal-backdrop) transparent;
+    scrollbar-width: thin;
+    cursor: auto;
+}
+.modal_close {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    width: 35px;
+    height: 35px;
+    background-color: transparent;
+    border: none;
+    background-image: url(../img/close_icon.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 25px;
+    border-radius: var(--button-radius);
+    cursor: pointer;
+}
+.modal_close:hover, .modal_close:focus {
+    background-color: var(--close-hover);
+    outline: none;
+}
+.modal_circle {
+    width: 132px;
+    height: 132px;
+    background-color: var(--background);
+    border-radius: 50%;
+    margin: 0 auto 41px auto;
+}
+.modal_placing {
+    display: flex;
+}
+.modal_img {
+    max-width: 360px;
+    height: min-content;
+    margin-right: 60px;
+}
+.modal_wrap {
+    width: 450px;
+}
+.modal_title {
+    color: var(--accent);
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 7px;
+}
+.modal_text {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+.modal_button {
+    background-color: var(--buttons);
+    color: var(--text);
+    font-weight: 500;
+    padding: 10px 19px;
+    border-radius: 5px;
+    display: block;
+    width: fit-content;
+}
+.modal_button:hover, .modal_button:focus {
+    background-color: var(--buttons-hover);
+    outline: none;
 }
 
 @media (width < 1000px) {
