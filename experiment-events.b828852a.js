@@ -207,11 +207,11 @@
       });
     }
   }
-})({"j0hWu":[function(require,module,exports,__globalThis) {
+})({"93v64":[function(require,module,exports,__globalThis) {
 var global = arguments[3];
 var HMR_HOST = null;
 var HMR_PORT = null;
-var HMR_SERVER_PORT = 60884;
+var HMR_SERVER_PORT = 1234;
 var HMR_SECURE = false;
 var HMR_ENV_HASH = "439701173a9199ea";
 var HMR_USE_SSE = false;
@@ -716,7 +716,7 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 },{}],"lhpGb":[function(require,module,exports,__globalThis) {
 var _api = require("./api");
 var _render = require("./render");
-let page = 0, currentSearch = null;
+let page = 0, currentSearch = null, currentCountry = null;
 async function app() {
     const data = await (0, _api.getDefaultEvents)(page);
     (0, _render.renderEvents)(data._embedded.events);
@@ -730,8 +730,10 @@ async function searchResultsLoad() {
 }
 document.querySelector(".nav_wrap").addEventListener("submit", (event)=>{
     event.preventDefault();
-    page = 0;
     currentSearch = document.querySelector("input.nav_inp").value;
+    currentCountry = null;
+    page = 0;
+    document.querySelector(".cards_info").textContent = `Search resulst for "${currentSearch}":`;
     searchResultsLoad();
 });
 document.querySelector(".cards_list").addEventListener("click", (e)=>{
@@ -745,7 +747,21 @@ document.querySelector(".cards_pag").addEventListener("click", (e)=>{
     if (!pagBtn) return;
     page = Number(pagBtn.dataset.page);
     if (currentSearch) searchResultsLoad();
+    else if (currentCountry) countryResultsLoad();
     else app();
+});
+const select = document.querySelector(".nav_select");
+async function countryResultsLoad() {
+    const data = await (0, _api.getEventsByCountry)(page, currentCountry);
+    (0, _render.renderEvents)(data._embedded.events);
+    (0, _render.renderPagination)(data.page.totalPages, page);
+}
+select.addEventListener("change", ()=>{
+    currentCountry = select.value;
+    currentSearch = null;
+    page = 0;
+    document.querySelector(".cards_info").textContent = `Resulst from the country of ${select.querySelector(`option[value=${select.value}]`).textContent}:`;
+    countryResultsLoad();
 });
 
 },{"./api":"4yEOZ","./render":"dvMGd"}],"4yEOZ":[function(require,module,exports,__globalThis) {
@@ -754,6 +770,7 @@ parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "getDefaultEvents", ()=>getDefaultEvents);
 parcelHelpers.export(exports, "getOneEvent", ()=>getOneEvent);
 parcelHelpers.export(exports, "getEventsByQuery", ()=>getEventsByQuery);
+parcelHelpers.export(exports, "getEventsByCountry", ()=>getEventsByCountry);
 const MAIN_URL = "https://app.ticketmaster.com/discovery/v2/", API_KEY = "JIZUA78ORWWvAkFITEgp9n4NpYKrXysZ", PER_PAGE = 20;
 async function getDefaultEvents(page) {
     const response = await fetch(MAIN_URL + `events.json?apikey=${API_KEY}&size=${PER_PAGE}&page=${page}`), data = await response.json();
@@ -765,6 +782,10 @@ async function getOneEvent(id) {
 }
 async function getEventsByQuery(page, query) {
     const response = await fetch(MAIN_URL + `events.json?apikey=${API_KEY}&size=${PER_PAGE}&page=${page}&keyword=${query}`), data = await response.json();
+    return data;
+}
+async function getEventsByCountry(page, country) {
+    const response = await fetch(MAIN_URL + `events.json?apikey=${API_KEY}&size=${PER_PAGE}&page=${page}&countryCode=${country}`), data = await response.json();
     return data;
 }
 
@@ -815,7 +836,7 @@ function renderEvents(events) {
                 </div>
                 <h2 class="cards_name">${event.name}</h2>
                 <p class="cards_date">${event.dates.start.localDate}</p>
-                <p class="cards_place">${event._embedded.venues[0].name}</p>
+                <p class="cards_place">${event._embedded?.venues[0]?.name}</p>
             </li>
         `;
     });
@@ -826,37 +847,35 @@ function renderEventModal(event) {
     modal.innerHTML = `
         <div class="modal_content">
 
-            <button class="modal_close">x</button>
+            <button class="modal_close"></button>
 
-            <img 
-                src="${event.images[0].url}" 
-                alt="${event.name}"
-                class="modal_img"
-            >
+            <div class="modal_circle"></div>
 
-            <h2>INFO</h2>
-            <p>${event.info || "No info"}</p>
+            <div class="modal_placing">
+                <img 
+                    src="${event.images[1].url}" 
+                    alt="${event.name}"
+                    class="modal_img"
+                >
 
-            <h2>WHEN</h2>
-            <p>${event.dates?.start?.localDate}</p>
+                <div class="modal_wrap">
+                    <h2 class="modal_title">INFO</h2>
+                    <p class="modal_text">${event.info || "No info"}</p>
 
-            <h2>WHERE</h2>
-            <p>${event._embedded?.venues?.[0]?.name}</p>
+                    <h2 class="modal_title">WHEN</h2>
+                    <p class="modal_text">${event.dates?.start?.localDate}<br>${event.dates?.start?.localTime} (${event.dates?.timezone || "underfined timezone"})</p>
 
-            <h2>WHO</h2>
-            <p>${event.name}</p>
+                    <h2 class="modal_title">WHERE</h2>
+                    <p class="modal_text">${event._embedded?.venues?.[0]?.city?.name}, ${event._embedded?.venues?.[0]?.country?.name}<br>${event._embedded?.venues?.[0]?.name}</p>
 
-            <h2>PRICES</h2>
-            <p>
-                Standard ${event.priceRanges?.[0]?.min || "-"} 
-                -
-                ${event.priceRanges?.[0]?.max || "-"} USD
-            </p>
+                    <h2 class="modal_title">WHO</h2>
+                    <p class="modal_text">${event.name}</p>
 
-            <a href="${event.url}" target="_blank">
-                BUY TICKETS
-            </a>
-
+                    <a href="${event.url}" target="_blank" class="modal_button">
+                        BUY TICKETS
+                    </a>
+                </div>
+            </div>
         </div>
     `;
     document.body.appendChild(modal);
@@ -885,6 +904,7 @@ function createPaginationElements(dataPage, text, isCurrent) {
 function renderPagination(totalPages, page) {
     cardsPag.innerHTML = "";
     if (totalPages > 29) totalPages = 29;
+    else totalPages--;
     if (page === 0) cardsPag.append(createPaginationElements(page, page + 1, true), createPaginationElements(page + 1, ">", false), createPaginationElements(totalPages, totalPages + 1, false));
     else if (page === totalPages) cardsPag.append(createPaginationElements(0, 1, false), createPaginationElements(page - 1, "<", false), createPaginationElements(page, page + 1, true));
     else cardsPag.append(createPaginationElements(0, 1, false), createPaginationElements(page - 1, "<", false), createPaginationElements(page, page + 1, true), createPaginationElements(page + 1, ">", false), createPaginationElements(totalPages, totalPages + 1, false));
@@ -898,6 +918,6 @@ function renderPagination(totalPages, page) {
 // }
 }
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}]},["j0hWu","lhpGb"], "lhpGb", "parcelRequireb97b", {})
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}]},["93v64","lhpGb"], "lhpGb", "parcelRequireb97b", {})
 
 //# sourceMappingURL=experiment-events.b828852a.js.map

@@ -7,7 +7,9 @@
   --input-button: #fff1;
   --input: #fff3;
   --input-hover: #fff4;
+  --modal-backdrop: #200d1d99;
   --modal-bg: #fff2fd;
+  --close-hover: #0002;
   --buttons: #4c00fe;
   --buttons-hover: #4000d5;
   --header-gradient: #c4c4c4;
@@ -161,6 +163,7 @@ header {
 
 .cards_poster {
   border-radius: var(--card-radius);
+  background-color: var(--light-text);
   justify-content: center;
   width: 180px;
   height: 227px;
@@ -275,7 +278,10 @@ footer {
 }
 
 .modal {
-  background-color: #00000080;
+  z-index: 3;
+  background-color: var(--modal-backdrop);
+  backdrop-filter: blur(3px);
+  cursor: pointer;
   justify-content: center;
   align-items: center;
   width: 100%;
@@ -287,8 +293,86 @@ footer {
 }
 
 .modal_content {
-  background-color: #fff;
-  padding: 20px;
+  background-color: var(--modal-bg);
+  scrollbar-color: var(--modal-backdrop) transparent;
+  scrollbar-width: thin;
+  cursor: auto;
+  border-radius: 200px 0;
+  max-height: 95vh;
+  margin: 10px 20px;
+  padding: 62px 20px;
+  position: relative;
+  overflow: auto;
+}
+
+.modal_close {
+  border-radius: var(--button-radius);
+  cursor: pointer;
+  background-color: #0000;
+  background-image: url("close_icon.ba631235.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 25px;
+  border: none;
+  width: 35px;
+  height: 35px;
+  position: absolute;
+  top: 25px;
+  right: 25px;
+}
+
+.modal_close:hover, .modal_close:focus {
+  background-color: var(--close-hover);
+  outline: none;
+}
+
+.modal_circle {
+  background-color: var(--background);
+  border-radius: 50%;
+  width: 132px;
+  height: 132px;
+  margin: 0 auto 41px;
+}
+
+.modal_placing {
+  display: flex;
+}
+
+.modal_img {
+  max-width: 360px;
+  height: min-content;
+  margin-right: 60px;
+}
+
+.modal_wrap {
+  width: 450px;
+}
+
+.modal_title {
+  color: var(--accent);
+  margin-bottom: 7px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.modal_text {
+  margin-bottom: 20px;
+  font-size: 18px;
+}
+
+.modal_button {
+  background-color: var(--buttons);
+  color: var(--text);
+  border-radius: 5px;
+  width: fit-content;
+  padding: 10px 19px;
+  font-weight: 500;
+  display: block;
+}
+
+.modal_button:hover, .modal_button:focus {
+  background-color: var(--buttons-hover);
+  outline: none;
 }
 
 @media (width < 1000px) {
@@ -312,6 +396,30 @@ footer {
 
   .cards_list {
     column-gap: 27px;
+  }
+
+  .modal_content {
+    border-radius: 175px 0;
+    padding: 28px 17px 56px;
+  }
+
+  .modal_circle {
+    width: 70px;
+    height: 70px;
+    margin-bottom: 43px;
+  }
+
+  .modal_img {
+    width: 233px;
+    margin-right: 30px;
+  }
+
+  .modal_title {
+    font-size: 20px;
+  }
+
+  .modal_text {
+    font-size: 16px;
   }
 }
 
@@ -387,6 +495,29 @@ footer {
   .cards_place:before {
     width: 6px;
     height: 9px;
+  }
+
+  .modal_content {
+    border-radius: 150px 0;
+    padding: 75px 14px 104px;
+  }
+
+  .modal_circle {
+    width: 102px;
+    height: 102px;
+    margin-bottom: 18px;
+  }
+
+  .modal_img {
+    display: none;
+  }
+
+  .modal_title, .modal_text {
+    text-align: center;
+  }
+
+  .modal_button {
+    margin: 0 auto;
   }
 }
 /*# sourceMappingURL=experiment-events.c92073ef.css.map */
