@@ -19,3 +19,9 @@ export async function getEventsByQuery(page, query) {
         data = await response.json();
     return data;
 }
+
+export async function getEventsByCountry(page, country) {
+    const response = await fetch(MAIN_URL + `events.json?apikey=${API_KEY}&size=${PER_PAGE}&page=${page}&countryCode=${country}`),
+        data = await response.json();
+    return data;
+}

@@ -716,7 +716,7 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 },{}],"lhpGb":[function(require,module,exports,__globalThis) {
 var _api = require("./api");
 var _render = require("./render");
-let page = 0, currentSearch = null;
+let page = 0, currentSearch = null, currentCountry = null;
 async function app() {
     const data = await (0, _api.getDefaultEvents)(page);
     (0, _render.renderEvents)(data._embedded.events);
@@ -730,8 +730,9 @@ async function searchResultsLoad() {
 }
 document.querySelector(".nav_wrap").addEventListener("submit", (event)=>{
     event.preventDefault();
-    page = 0;
     currentSearch = document.querySelector("input.nav_inp").value;
+    currentCountry = null;
+    page = 0;
     document.querySelector(".cards_info").textContent = `Search resulst for "${currentSearch}":`;
     searchResultsLoad();
 });
@@ -746,7 +747,21 @@ document.querySelector(".cards_pag").addEventListener("click", (e)=>{
     if (!pagBtn) return;
     page = Number(pagBtn.dataset.page);
     if (currentSearch) searchResultsLoad();
+    else if (currentCountry) countryResultsLoad();
     else app();
+});
+const select = document.querySelector(".nav_select");
+async function countryResultsLoad() {
+    const data = await (0, _api.getEventsByCountry)(page, currentCountry);
+    (0, _render.renderEvents)(data._embedded.events);
+    (0, _render.renderPagination)(data.page.totalPages, page);
+}
+select.addEventListener("change", ()=>{
+    currentCountry = select.value;
+    currentSearch = null;
+    page = 0;
+    document.querySelector(".cards_info").textContent = `Resulst from the country of ${select.querySelector(`option[value=${select.value}]`).textContent}:`;
+    countryResultsLoad();
 });
 
 },{"./api":"4yEOZ","./render":"dvMGd"}],"4yEOZ":[function(require,module,exports,__globalThis) {
@@ -755,6 +770,7 @@ parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "getDefaultEvents", ()=>getDefaultEvents);
 parcelHelpers.export(exports, "getOneEvent", ()=>getOneEvent);
 parcelHelpers.export(exports, "getEventsByQuery", ()=>getEventsByQuery);
+parcelHelpers.export(exports, "getEventsByCountry", ()=>getEventsByCountry);
 const MAIN_URL = "https://app.ticketmaster.com/discovery/v2/", API_KEY = "JIZUA78ORWWvAkFITEgp9n4NpYKrXysZ", PER_PAGE = 20;
 async function getDefaultEvents(page) {
     const response = await fetch(MAIN_URL + `events.json?apikey=${API_KEY}&size=${PER_PAGE}&page=${page}`), data = await response.json();
@@ -766,6 +782,10 @@ async function getOneEvent(id) {
 }
 async function getEventsByQuery(page, query) {
     const response = await fetch(MAIN_URL + `events.json?apikey=${API_KEY}&size=${PER_PAGE}&page=${page}&keyword=${query}`), data = await response.json();
+    return data;
+}
+async function getEventsByCountry(page, country) {
+    const response = await fetch(MAIN_URL + `events.json?apikey=${API_KEY}&size=${PER_PAGE}&page=${page}&countryCode=${country}`), data = await response.json();
     return data;
 }
 
