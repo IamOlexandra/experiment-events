@@ -268,12 +268,13 @@ footer {
     position: relative;
     background-color: var(--modal-bg);
     padding: 62px 20px;
-    border-radius: 300px 0 300px 0;
-    max-height: 100vh;
+    border-radius: 200px 0 200px 0;
+    max-height: 95vh;
     overflow: auto;
     scrollbar-color: var(--modal-backdrop) transparent;
     scrollbar-width: thin;
     cursor: auto;
+    margin: 10px 20px;
 }
 .modal_close {
     position: absolute;
@@ -354,6 +355,26 @@ footer {
     .cards_list {
         column-gap: 27px;
     }
+
+    .modal_content {
+        padding: 28px 17px 56px 17px;
+        border-radius: 175px 0 175px 0;
+    }
+    .modal_circle {
+        width: 70px;
+        height: 70px;
+        margin-bottom: 43px;
+    }
+    .modal_img {
+        width: 233px;
+        margin-right: 30px;
+    }
+    .modal_title {
+        font-size: 20px;
+    }
+    .modal_text {
+        font-size: 16px;
+    }
 }
 @media (width < 660px) {
     .nav {
@@ -415,5 +436,24 @@ footer {
     .cards_place::before {
         width: 6px;
         height: 9px;
+    }
+
+    .modal_content {
+        padding: 75px 14px 104px 14px;
+        border-radius: 150px 0 150px 0;
+    }
+    .modal_circle {
+        width: 102px;
+        height: 102px;
+        margin-bottom: 18px;
+    }
+    .modal_img {
+        display: none;
+    }
+    .modal_title, .modal_text {
+        text-align: center;
+    }
+    .modal_button {
+        margin: 0 auto;
     }
 }

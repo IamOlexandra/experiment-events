@@ -1,7 +1,8 @@
-import {getDefaultEvents, getOneEvent, getEventsByQuery} from "./api";
+import {getDefaultEvents, getOneEvent, getEventsByQuery, getEventsByCountry} from "./api";
 import {renderEvents, renderEventModal, renderPagination} from "./render";
 let page = 0,
-    currentSearch = null;
+    currentSearch = null,
+    currentCountry = null;
 
 async function app() {
     const data = await getDefaultEvents(page);
@@ -17,8 +18,9 @@ async function searchResultsLoad() {
 }
 document.querySelector(".nav_wrap").addEventListener("submit", event => {
     event.preventDefault();
-    page = 0;
     currentSearch = document.querySelector("input.nav_inp").value;
+    currentCountry = null;
+    page = 0;
     document.querySelector(".cards_info").textContent = `Search resulst for "${currentSearch}":`;
     searchResultsLoad();
 });
@@ -49,7 +51,23 @@ document.querySelector(".cards_pag").addEventListener("click", (e) => {
 
     if (currentSearch) {
         searchResultsLoad();
+    } else if (currentCountry) {
+        countryResultsLoad();
     } else {
         app();
     }
+});
+
+const select = document.querySelector(".nav_select");
+async function countryResultsLoad() {
+    const data = await getEventsByCountry(page, currentCountry);
+    renderEvents(data._embedded.events);
+    renderPagination(data.page.totalPages, page);
+}
+select.addEventListener("change", () => {
+    currentCountry = select.value;
+    currentSearch = null;
+    page = 0;
+    document.querySelector(".cards_info").textContent = `Resulst from the country of ${select.querySelector(`option[value=${select.value}]`).textContent}:`;
+    countryResultsLoad();
 });
