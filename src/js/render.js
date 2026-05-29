@@ -25,7 +25,7 @@ export function renderEventModal(event) {
         <div class="modal_content">
 
             <button class="modal_close"></button>
-
+          <button class="modal_favorite">Улюблене</button>
             <div class="modal_circle"></div>
 
             <div class="modal_placing">
@@ -61,7 +61,16 @@ export function renderEventModal(event) {
     modal.querySelector(".modal_close").addEventListener("click", () => {
         modal.remove();
     });
+    
+modal.querySelector(".modal_favorite").addEventListener("click", () => {
 
+    const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+    favorites.push(event);
+
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+
+});
     modal.addEventListener("click", (e) => {
 
         if (e.target === modal) {
