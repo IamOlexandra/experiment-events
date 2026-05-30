@@ -360,9 +360,11 @@ footer {
   font-size: 18px;
 }
 
-.modal_button {
+.modal_button, .modal_favorite {
   background-color: var(--buttons);
   color: var(--text);
+  cursor: pointer;
+  border: none;
   border-radius: 5px;
   width: fit-content;
   padding: 10px 19px;
@@ -370,7 +372,11 @@ footer {
   display: block;
 }
 
-.modal_button:hover, .modal_button:focus {
+.modal_button {
+  margin-bottom: 7px;
+}
+
+.modal_button:hover, .modal_button:focus, .modal_favorite:hover, .modal_favorite:focus {
   background-color: var(--buttons-hover);
   outline: none;
 }
@@ -516,8 +522,8 @@ footer {
     text-align: center;
   }
 
-  .modal_button {
-    margin: 0 auto;
+  .modal_button, .modal_favorite {
+    margin: 0 auto 7px;
   }
 }
 /*# sourceMappingURL=experiment-events.c92073ef.css.map */

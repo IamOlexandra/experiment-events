@@ -860,7 +860,6 @@ function renderEventModal(event) {
         <div class="modal_content">
 
             <button class="modal_close"></button>
-          <button class="modal_favorite">\u{423}\u{43B}\u{44E}\u{431}\u{43B}\u{435}\u{43D}\u{435}</button>
             <div class="modal_circle"></div>
 
             <div class="modal_placing">
@@ -886,6 +885,7 @@ function renderEventModal(event) {
                     <a href="${event.url}" target="_blank" class="modal_button">
                         BUY TICKETS
                     </a>
+                    <button class="modal_favorite">Add to favourites</button>
                 </div>
             </div>
         </div>
@@ -896,14 +896,14 @@ function renderEventModal(event) {
     });
     modal.querySelector(".modal_favorite").addEventListener("click", ()=>{
         const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
-        if (!favorites.includes(event.id)) favorites.push(event.id);
+        favorites.push(event.id);
         localStorage.setItem("favorites", JSON.stringify(favorites));
-        modal.addEventListener("click", (e)=>{
-            if (e.target === modal) modal.remove();
-        });
-        document.addEventListener("keydown", (e)=>{
-            if (e.key === "Escape") modal.remove();
-        });
+    });
+    modal.addEventListener("click", (e)=>{
+        if (e.target === modal) modal.remove();
+    });
+    document.addEventListener("keydown", (e)=>{
+        if (e.key === "Escape") modal.remove();
     });
 }
 const cardsPag = document.querySelector(".cards_pag");
