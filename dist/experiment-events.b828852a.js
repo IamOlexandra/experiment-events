@@ -751,6 +751,7 @@ document.querySelector(".cards_pag").addEventListener("click", (e)=>{
     else app();
 });
 const select = document.querySelector(".nav_select");
+const favoritesButton = document.querySelector(".favorites_button");
 async function countryResultsLoad() {
     const data = await (0, _api.getEventsByCountry)(page, currentCountry);
     (0, _render.renderEvents)(data._embedded.events);
@@ -762,6 +763,17 @@ select.addEventListener("change", ()=>{
     page = 0;
     document.querySelector(".cards_info").textContent = `Resulst from the country of ${select.querySelector(`option[value=${select.value}]`).textContent}:`;
     countryResultsLoad();
+});
+favoritesButton.addEventListener("click", async ()=>{
+    const favoriteIds = JSON.parse(localStorage.getItem("favorites")) || [];
+    const favoriteEvents = [];
+    for (const id of favoriteIds){
+        const event = await (0, _api.getOneEvent)(id);
+        favoriteEvents.push(event);
+    }
+    (0, _render.renderEvents)(favoriteEvents);
+    document.querySelector(".cards_pag").innerHTML = "";
+    document.querySelector(".cards_info").textContent = "Favorite events:";
 });
 
 },{"./api":"4yEOZ","./render":"dvMGd"}],"4yEOZ":[function(require,module,exports,__globalThis) {
@@ -848,7 +860,7 @@ function renderEventModal(event) {
         <div class="modal_content">
 
             <button class="modal_close"></button>
-
+          <button class="modal_favorite">\u{423}\u{43B}\u{44E}\u{431}\u{43B}\u{435}\u{43D}\u{435}</button>
             <div class="modal_circle"></div>
 
             <div class="modal_placing">
@@ -882,11 +894,16 @@ function renderEventModal(event) {
     modal.querySelector(".modal_close").addEventListener("click", ()=>{
         modal.remove();
     });
-    modal.addEventListener("click", (e)=>{
-        if (e.target === modal) modal.remove();
-    });
-    document.addEventListener("keydown", (e)=>{
-        if (e.key === "Escape") modal.remove();
+    modal.querySelector(".modal_favorite").addEventListener("click", ()=>{
+        const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+        if (!favorites.includes(event.id)) favorites.push(event.id);
+        localStorage.setItem("favorites", JSON.stringify(favorites));
+        modal.addEventListener("click", (e)=>{
+            if (e.target === modal) modal.remove();
+        });
+        document.addEventListener("keydown", (e)=>{
+            if (e.key === "Escape") modal.remove();
+        });
     });
 }
 const cardsPag = document.querySelector(".cards_pag");

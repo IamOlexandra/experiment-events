@@ -66,11 +66,12 @@ modal.querySelector(".modal_favorite").addEventListener("click", () => {
 
     const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
 
-    favorites.push(event);
+   if (!favorites.includes(event.id)) {
+    favorites.push(event.id);
+}
 
-    localStorage.setItem("favorites", JSON.stringify(favorites));
+localStorage.setItem("favorites", JSON.stringify(favorites));
 
-});
     modal.addEventListener("click", (e) => {
 
         if (e.target === modal) {
@@ -87,7 +88,7 @@ modal.querySelector(".modal_favorite").addEventListener("click", () => {
 
     });
 
-}
+})};
 
 const cardsPag = document.querySelector(".cards_pag");
 function createPaginationElements(dataPage, text, isCurrent) {

@@ -59,6 +59,7 @@ document.querySelector(".cards_pag").addEventListener("click", (e) => {
 });
 
 const select = document.querySelector(".nav_select");
+const favoritesButton = document.querySelector(".favorites_button");
 async function countryResultsLoad() {
     const data = await getEventsByCountry(page, currentCountry);
     renderEvents(data._embedded.events);
@@ -70,4 +71,24 @@ select.addEventListener("change", () => {
     page = 0;
     document.querySelector(".cards_info").textContent = `Resulst from the country of ${select.querySelector(`option[value=${select.value}]`).textContent}:`;
     countryResultsLoad();
+});
+
+favoritesButton.addEventListener("click", async () => {
+
+    const favoriteIds =
+        JSON.parse(localStorage.getItem("favorites")) || [];
+
+    const favoriteEvents = [];
+
+    for (const id of favoriteIds) {
+        const event = await getOneEvent(id);
+        favoriteEvents.push(event);
+    }
+
+    renderEvents(favoriteEvents);
+
+    document.querySelector(".cards_pag").innerHTML = "";
+
+    document.querySelector(".cards_info").textContent =
+        "Favorite events:";
 });
