@@ -2,7 +2,8 @@ import {getDefaultEvents, getOneEvent, getEventsByQuery, getEventsByCountry} fro
 import {renderEvents, renderEventModal, renderPagination} from "./render";
 let page = 0,
     currentSearch = null,
-    currentCountry = null;
+    currentCountry = null,
+    currentFavorites = null;
 
 async function app() {
     const data = await getDefaultEvents(page);
@@ -20,6 +21,7 @@ document.querySelector(".nav_wrap").addEventListener("submit", event => {
     event.preventDefault();
     currentSearch = document.querySelector("input.nav_inp").value;
     currentCountry = null;
+    currentFavorites = null;
     page = 0;
     document.querySelector(".cards_info").textContent = `Search resulst for "${currentSearch}":`;
     searchResultsLoad();
@@ -53,6 +55,8 @@ document.querySelector(".cards_pag").addEventListener("click", (e) => {
         searchResultsLoad();
     } else if (currentCountry) {
         countryResultsLoad();
+    } else if (currentFavorites) {
+        favoritesLoad();
     } else {
         app();
     }
@@ -68,26 +72,50 @@ async function countryResultsLoad() {
 select.addEventListener("change", () => {
     currentCountry = select.value;
     currentSearch = null;
+    currentFavorites = null;
     page = 0;
     document.querySelector(".cards_info").textContent = `Resulst from the country of ${select.querySelector(`option[value=${select.value}]`).textContent}:`;
     countryResultsLoad();
 });
 
-favoritesButton.addEventListener("click", async () => {
+async function favoritesLoad() {
 
-    const favoriteIds =
-        JSON.parse(localStorage.getItem("favorites")) || [];
+    const favoriteEvents = await [];
 
-    const favoriteEvents = [];
-
-    for (const id of favoriteIds) {
+    for await (const id of currentFavorites[page]) {
         const event = await getOneEvent(id);
         favoriteEvents.push(event);
     }
 
     renderEvents(favoriteEvents);
+    renderPagination(currentFavorites.length, page);
+}
 
-    document.querySelector(".cards_pag").innerHTML = "";
+favoritesButton.addEventListener("click", () => {
+
+    const favoriteIds =
+        JSON.parse(localStorage.getItem("favorites")) || [];
+
+    currentFavorites = [];
+    currentSearch = null;
+    currentCountry = null;
+
+    let litleArray = [];
+    favoriteIds.forEach((id, index) => {
+        if(index % 4 === 0 && index !== 0) {
+            currentFavorites.push(litleArray);
+            litleArray = [];
+            litleArray.push(id);
+        } else {
+            litleArray.push(id);
+        }
+    });
+    if (litleArray !== []) {
+        currentFavorites.push(litleArray);
+    }
+
+    page = 0;
+    favoritesLoad();
 
     document.querySelector(".cards_info").textContent =
         "Favorite events:";

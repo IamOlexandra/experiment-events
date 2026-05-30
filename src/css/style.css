@@ -323,7 +323,7 @@ footer {
     font-size: 18px;
     margin-bottom: 20px;
 }
-.modal_button, .modal_favorite {
+.modal_button, .modal_favorite, .favorites_button {
     background-color: var(--buttons);
     color: var(--text);
     font-weight: 500;
@@ -337,9 +337,14 @@ footer {
 .modal_button {
     margin-bottom: 7px;
 }
-.modal_button:hover, .modal_button:focus, .modal_favorite:hover, .modal_favorite:focus {
+.modal_button:hover, .modal_button:focus, .modal_favorite:hover, .modal_favorite:focus, .favorites_button:hover, .favorites_button:focus {
     background-color: var(--buttons-hover);
     outline: none;
+}
+.favorites_button {
+    position: fixed;
+    top: 30px;
+    right: 30px;
 }
 
 @media (width < 1000px) {

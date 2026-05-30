@@ -50,11 +50,20 @@ export function renderEventModal(event) {
                     <a href="${event.url}" target="_blank" class="modal_button">
                         BUY TICKETS
                     </a>
-                    <button class="modal_favorite">Add to favourites</button>
+                    <button class="modal_favorite">Add to favorites</button>
                 </div>
             </div>
         </div>
     `;
+
+    const favButton = modal.querySelector(".modal_favorite");
+
+    const initialFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+    const initialIdIndex = initialFavorites.indexOf(event.id);
+    if (initialIdIndex !== -1) {
+        favButton.textContent = "Remove from favorites";
+    }
 
     document.body.appendChild(modal);
 
@@ -62,11 +71,21 @@ export function renderEventModal(event) {
         modal.remove();
     });
     
-    modal.querySelector(".modal_favorite").addEventListener("click", () => {
+    favButton.addEventListener("click", () => {
 
-        const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+        const favoritesFromLS = JSON.parse(localStorage.getItem("favorites"));
 
-        favorites.push(event.id);
+        const favorites = favoritesFromLS || [];
+        
+        const idIndex = favorites.indexOf(event.id);
+
+        if (idIndex !== -1) {
+            favorites.splice(idIndex, 1);
+            favButton.textContent = "Add to favorites";
+        } else {
+            favorites.push(event.id);
+            favButton.textContent = "Remove from favorites";
+        }
 
         localStorage.setItem("favorites", JSON.stringify(favorites));
 
@@ -117,12 +136,4 @@ export function renderPagination(totalPages, page) {
     } else {
         cardsPag.append(createPaginationElements(0, 1, false), createPaginationElements(page - 1, "<", false),  createPaginationElements(page, page + 1, true), createPaginationElements(page + 1, ">", false), createPaginationElements(totalPages, totalPages + 1, false));
     }
-    // for (let i = 0; i <= totalPages; i++) {
-    //     const item = document.createElement("li");
-    //     item.innerHTML = `<button type="button" class="pag_button" data-page="${i}">${i + 1}</button>`;
-    //     if (i === page) {
-    //         item.querySelector(".pag_button").classList.add("pag_current")
-    //     }
-    //     cardsPag.append(item);
-    // }
 }
