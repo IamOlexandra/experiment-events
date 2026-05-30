@@ -360,9 +360,11 @@ footer {
   font-size: 18px;
 }
 
-.modal_button {
+.modal_button, .modal_favorite, .favorites_button {
   background-color: var(--buttons);
   color: var(--text);
+  cursor: pointer;
+  border: none;
   border-radius: 5px;
   width: fit-content;
   padding: 10px 19px;
@@ -370,9 +372,19 @@ footer {
   display: block;
 }
 
-.modal_button:hover, .modal_button:focus {
+.modal_button {
+  margin-bottom: 7px;
+}
+
+.modal_button:hover, .modal_button:focus, .modal_favorite:hover, .modal_favorite:focus, .favorites_button:hover, .favorites_button:focus {
   background-color: var(--buttons-hover);
   outline: none;
+}
+
+.favorites_button {
+  position: fixed;
+  top: 30px;
+  right: 30px;
 }
 
 @media (width < 1000px) {
@@ -516,8 +528,8 @@ footer {
     text-align: center;
   }
 
-  .modal_button {
-    margin: 0 auto;
+  .modal_button, .modal_favorite {
+    margin: 0 auto 7px;
   }
 }
 /*# sourceMappingURL=experiment-events.c92073ef.css.map */

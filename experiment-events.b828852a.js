@@ -716,7 +716,7 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 },{}],"lhpGb":[function(require,module,exports,__globalThis) {
 var _api = require("./api");
 var _render = require("./render");
-let page = 0, currentSearch = null, currentCountry = null;
+let page = 0, currentSearch = null, currentCountry = null, currentFavorites = null;
 async function app() {
     const data = await (0, _api.getDefaultEvents)(page);
     (0, _render.renderEvents)(data._embedded.events);
@@ -732,6 +732,7 @@ document.querySelector(".nav_wrap").addEventListener("submit", (event)=>{
     event.preventDefault();
     currentSearch = document.querySelector("input.nav_inp").value;
     currentCountry = null;
+    currentFavorites = null;
     page = 0;
     document.querySelector(".cards_info").textContent = `Search resulst for "${currentSearch}":`;
     searchResultsLoad();
@@ -748,9 +749,11 @@ document.querySelector(".cards_pag").addEventListener("click", (e)=>{
     page = Number(pagBtn.dataset.page);
     if (currentSearch) searchResultsLoad();
     else if (currentCountry) countryResultsLoad();
+    else if (currentFavorites) favoritesLoad();
     else app();
 });
 const select = document.querySelector(".nav_select");
+const favoritesButton = document.querySelector(".favorites_button");
 async function countryResultsLoad() {
     const data = await (0, _api.getEventsByCountry)(page, currentCountry);
     (0, _render.renderEvents)(data._embedded.events);
@@ -759,9 +762,37 @@ async function countryResultsLoad() {
 select.addEventListener("change", ()=>{
     currentCountry = select.value;
     currentSearch = null;
+    currentFavorites = null;
     page = 0;
     document.querySelector(".cards_info").textContent = `Resulst from the country of ${select.querySelector(`option[value=${select.value}]`).textContent}:`;
     countryResultsLoad();
+});
+async function favoritesLoad() {
+    const favoriteEvents = await [];
+    for await (const id of currentFavorites[page]){
+        const event = await (0, _api.getOneEvent)(id);
+        favoriteEvents.push(event);
+    }
+    (0, _render.renderEvents)(favoriteEvents);
+    (0, _render.renderPagination)(currentFavorites.length, page);
+}
+favoritesButton.addEventListener("click", ()=>{
+    const favoriteIds = JSON.parse(localStorage.getItem("favorites")) || [];
+    currentFavorites = [];
+    currentSearch = null;
+    currentCountry = null;
+    let litleArray = [];
+    favoriteIds.forEach((id, index)=>{
+        if (index % 4 === 0 && index !== 0) {
+            currentFavorites.push(litleArray);
+            litleArray = [];
+            litleArray.push(id);
+        } else litleArray.push(id);
+    });
+    if (litleArray !== []) currentFavorites.push(litleArray);
+    page = 0;
+    favoritesLoad();
+    document.querySelector(".cards_info").textContent = "Favorite events:";
 });
 
 },{"./api":"4yEOZ","./render":"dvMGd"}],"4yEOZ":[function(require,module,exports,__globalThis) {
@@ -873,18 +904,30 @@ function renderEventModal(event) {
                     <a href="${event.url}" target="_blank" class="modal_button">
                         BUY TICKETS
                     </a>
-                    <button class="modal_favorite">Add to favourites</button>
+                    <button class="modal_favorite">Add to favorites</button>
                 </div>
             </div>
         </div>
     `;
+    const favButton = modal.querySelector(".modal_favorite");
+    const initialFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    const initialIdIndex = initialFavorites.indexOf(event.id);
+    if (initialIdIndex !== -1) favButton.textContent = "Remove from favorites";
     document.body.appendChild(modal);
     modal.querySelector(".modal_close").addEventListener("click", ()=>{
         modal.remove();
     });
-    modal.querySelector(".modal_favorite").addEventListener("click", ()=>{
-        const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
-        favorites.push(event.id);
+    favButton.addEventListener("click", ()=>{
+        const favoritesFromLS = JSON.parse(localStorage.getItem("favorites"));
+        const favorites = favoritesFromLS || [];
+        const idIndex = favorites.indexOf(event.id);
+        if (idIndex !== -1) {
+            favorites.splice(idIndex, 1);
+            favButton.textContent = "Add to favorites";
+        } else {
+            favorites.push(event.id);
+            favButton.textContent = "Remove from favorites";
+        }
         localStorage.setItem("favorites", JSON.stringify(favorites));
     });
     modal.addEventListener("click", (e)=>{
@@ -913,14 +956,6 @@ function renderPagination(totalPages, page) {
     if (page === 0) cardsPag.append(createPaginationElements(page, page + 1, true), createPaginationElements(page + 1, ">", false), createPaginationElements(totalPages, totalPages + 1, false));
     else if (page === totalPages) cardsPag.append(createPaginationElements(0, 1, false), createPaginationElements(page - 1, "<", false), createPaginationElements(page, page + 1, true));
     else cardsPag.append(createPaginationElements(0, 1, false), createPaginationElements(page - 1, "<", false), createPaginationElements(page, page + 1, true), createPaginationElements(page + 1, ">", false), createPaginationElements(totalPages, totalPages + 1, false));
-// for (let i = 0; i <= totalPages; i++) {
-//     const item = document.createElement("li");
-//     item.innerHTML = `<button type="button" class="pag_button" data-page="${i}">${i + 1}</button>`;
-//     if (i === page) {
-//         item.querySelector(".pag_button").classList.add("pag_current")
-//     }
-//     cardsPag.append(item);
-// }
 }
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}]},["93v64","lhpGb"], "lhpGb", "parcelRequireb97b", {})
